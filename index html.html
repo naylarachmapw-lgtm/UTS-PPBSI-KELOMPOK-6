@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Petualangan Kiko Si Unik - Bahasa Indonesia Kelas 5</title>
+
+  <!-- Google Fonts untuk tampilan menarik anak-anak -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #4A90E2;
+      --primary-dark: #357ABD;
+      --secondary: #FF7043;
+      --accent: #FFCA28;
+      --success: #66BB6A;
+      --danger: #EF5350;
+      --bg-sky: linear-gradient(180deg, #87CEEB 0%, #E0F7FA 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --font-heading: 'Fredoka', cursive, sans-serif;
+      --font-body: 'Nunito', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-sky);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      color: #2C3E50;
+      overflow-x: hidden;
+    }
+
+    /* Container Utama Responsif (Layar HP, Tablet, Laptop, Smartboard) */
+    .game-container {
+      width: 100%;
+      max-width: 900px;
+      min-height: 620px;
+      background: var(--card-bg);
+      border-radius: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 0 8px rgba(255,255,255,0.6);
+      padding: 24px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Header Audio Control */
+    .audio-toggle {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: #FFF;
+      border: 3px solid #4A90E2;
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-family: var(--font-heading);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      z-index: 10;
+    }
+    .audio-toggle:active { transform: scale(0.92); }
+
+    /* Mascot Animasi (SVG CSS Animated) */
+    .mascot-wrapper {
+      text-align: center;
+      margin: 10px 0;
+      position: relative;
+    }
+    .mascot-svg {
+      width: 130px;
+      height: 130px;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+      transition: transform 0.3s ease;
+    }
+    .mascot-idle {
+      animation: floatMascot 3s ease-in-out infinite;
+    }
+    .mascot-happy {
+      animation: jumpMascot 0.6s ease-in-out infinite alternate;
+    }
+    .mascot-sad {
+      animation: shakeMascot 0.5s ease-in-out;
+    }
+
+    @keyframes floatMascot {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    @keyframes jumpMascot {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-25px) scale(1.1) rotate(-3deg); }
+    }
+    @keyframes shakeMascot {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-12px) rotate(-5deg); }
+      40%, 80% { transform: translateX(12px) rotate(5deg); }
+    }
+
+    /* Screen Views */
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      animation: fadeIn 0.4s ease-out;
+    }
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Judul & Teks */
+    h1.game-title {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      color: #2C3E50;
+      text-align: center;
+      text-shadow: 2px 2px 0px #FFF, 4px 4px 0px rgba(74, 144, 226, 0.3);
+      margin-bottom: 6px;
+    }
+    p.subtitle {
+      font-size: 1.05rem;
+      color: #5A6B7C;
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    /* Form Login */
+    .login-box {
+      background: #F0F7FF;
+      border: 3px dashed #4A90E2;
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 440px;
+      margin-bottom: 16px;
+    }
+    .input-group {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .input-group label {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      color: #334E68;
+      margin-bottom: 6px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1.1rem;
+      font-family: var(--font-body);
+      border: 2px solid #CBD5E1;
+      border-radius: 14px;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    .input-group input:focus {
+      border-color: #4A90E2;
+      box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+    }
+
+    /* Level Selector Cards */
+    .level-container {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 20px;
+    }
+    .level-card {
+      flex: 1;
+      background: #FFF;
+      border: 3px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .level-card:hover { transform: translateY(-3px); }
+    .level-card.selected {
+      border-color: #FF7043;
+      background: #FFF3E0;
+      box-shadow: 0 6px 16px rgba(255, 112, 67, 0.25);
+    }
+    .level-card h4 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+    .level-card p {
+      font-size: 0.8rem;
+      color: #64748B;
+      font-weight: 700;
+    }
+
+    /* Tombol Utama Interaktif */
+    .btn-action {
+      background: linear-gradient(180deg, #FF7043 0%, #F4511E 100%);
+      color: #FFF;
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(244, 81, 30, 0.35), inset 0 2px 0 rgba(255,255,255,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+      width: 100%;
+      max-width: 320px;
+    }
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(244, 81, 30, 0.45);
+    }
+    .btn-action:active {
+      transform: translateY(2px);
+      box-shadow: 0 4px 10px rgba(244, 81, 30, 0.3);
+    }
+
+    /* Game Play Elements */
+    .hud-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: #F8FAFC;
+      padding: 10px 18px;
+      border-radius: 16px;
+      border: 2px solid #E2E8F0;
+      margin-bottom: 12px;
+    }
+    .hud-item {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      color: #334E68;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hud-badge {
+      background: #4A90E2;
+      color: #FFF;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+    }
+
+    /* Timer Progress Bar */
+    .timer-container {
+      width: 100%;
+      height: 14px;
+      background: #E2E8F0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .timer-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #66BB6A 0%, #FFCA28 60%, #EF5350 100%);
+      border-radius: 10px;
+      transition: width 0.1s linear;
+    }
+
+    /* Island Step Progress Indicator */
+    .island-progress {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .island-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #E2E8F0;
+      color: #94A3B8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      border: 2px solid #CBD5E1;
+      transition: all 0.3s;
+    }
+    .island-dot.completed {
+      background: #66BB6A;
+      color: #FFF;
+      border-color: #43A047;
+    }
+    .island-dot.active {
+      background: #FFCA28;
+      color: #5D4037;
+      border-color: #FFA000;
+      transform: scale(1.2);
+      box-shadow: 0 0 10px rgba(255, 202, 40, 0.6);
+    }
+
+    /* Question Card */
+    .question-card {
+      background: #FFF;
+      border: 3px solid #BAE6FD;
+      border-radius: 22px;
+      padding: 20px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+      position: relative;
+    }
+    .question-tag {
+      display: inline-block;
+      background: #E0F2FE;
+      color: #0284C7;
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      padding: 4px 14px;
+      border-radius: 50px;
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #1E293B;
+      line-height: 1.4;
+    }
+
+    /* Options Grid (Optimized for Touch Screens / Smartboards) */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 600px) {
+      .options-grid { grid-template-columns: 1fr; }
+    }
+
+    .option-btn {
+      background: #F8FAFC;
+      border: 3px solid #CBD5E1;
+      border-radius: 18px;
+      padding: 16px 14px;
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #334E68;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      min-height: 60px;
+    }
+    .option-btn:hover {
+      background: #F1F5F9;
+      border-color: #4A90E2;
+      transform: translateY(-2px);
+    }
+    .option-btn:active {
+      transform: scale(0.98);
+    }
+    .option-prefix {
+      background: #E2E8F0;
+      color: #475569;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .option-btn.correct {
+      background: #DCFCE7 !important;
+      border-color: #22C55E !important;
+      color: #15803D !important;
+    }
+    .option-btn.correct .option-prefix {
+      background: #22C55E;
+      color: #FFF;
+    }
+    .option-btn.wrong {
+      background: #FEE2E2 !important;
+      border-color: #EF4444 !important;
+      color: #B91C1C !important;
+    }
+    .option-btn.wrong .option-prefix {
+      background: #EF4444;
+      color: #FFF;
+    }
+
+    /* Hint Box */
+    .hint-box {
+      font-size: 0.9rem;
+      color: #0284C7;
+      background: #F0F9FF;
+      border: 1px solid #BAE6FD;
+      padding: 8px 14px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: none;
+      width: 100%;
+    }
+
+    /* End Screen / Result Rapor Card */
+    .rapor-card {
+      background: #FFF;
+      border: 3px solid #4A90E2;
+      border-radius: 24px;
+      padding: 24px;
+      width: 100%;
+      max-width: 650px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 16px;
+    }
+    .stars-display {
+      font-size: 2.8rem;
+      margin: 10px 0;
+      letter-spacing: 6px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .stat-box {
+      background: #F8FAFC;
+      border-radius: 14px;
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #E2E8F0;
+    }
+    .stat-box h5 {
+      font-size: 0.8rem;
+      color: #64748B;
+      margin-bottom: 4px;
+    }
+    .stat-box p {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      color: #1E293B;
+    }
+
+    .review-list {
+      max-height: 220px;
+      overflow-y: auto;
+      text-align: left;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    .review-item {
+      padding: 8px;
+      border-bottom: 1px solid #F1F5F9;
+      font-size: 0.88rem;
+    }
+    .review-item:last-child { border-bottom: none; }
+    .review-item strong { color: #334E68; }
+    .badge-correct { color: #16A34A; font-weight: bold; }
+    .badge-wrong { color: #DC2626; font-weight: bold; }
+
+    /* Floating Confetti Canvas */
+    #confettiCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Tombol Kontrol Suara -->
+    <button class="audio-toggle" id="audioBtn" onclick="toggleAudio()">
+      🔊 Suara: ON
+    </button>
+
+    <!-- 1. HALAMAN LOGIN & PILIH LEVEL -->
+    <div id="loginScreen" class="screen active">
+      <h1 class="game-title">🏝️ Petualangan Kiko</h1>
+      <p class="subtitle">Pulau Kata Ajaib - Bahasa Indonesia Kelas 5 (Bab 1)</p>
+
+      <!-- Maskot Interactive SVG -->
+      <div class="mascot-wrapper">
+        <svg class="mascot-svg mascot-idle" id="mascotSvg" viewBox="0 0 100 100">
+          <!-- Body -->
+          <circle cx="50" cy="55" r="35" fill="#4A90E2" />
+          <circle cx="50" cy="55" r="28" fill="#64B5F6" />
+          <!-- Telinga Unik -->
+          <path d="M 25 28 Q 15 10 32 20 Z" fill="#FF7043" />
+          <path d="M 75 28 Q 85 10 68 20 Z" fill="#FF7043" />
+          <!-- Mata -->
+          <circle id="leftEye" cx="40" cy="48" r="6" fill="#FFF" />
+          <circle cx="40" cy="48" r="3" fill="#2C3E50" />
+          <circle id="rightEye" cx="60" cy="48" r="6" fill="#FFF" />
+          <circle cx="60" cy="48" r="3" fill="#2C3E50" />
+          <!-- Pipi Merah -->
+          <circle cx="33" cy="56" r="4" fill="#FF8A80" opacity="0.7" />
+          <circle cx="67" cy="56" r="4" fill="#FF8A80" opacity="0.7" />
+          <!-- Mulut Senyum -->
+          <path id="mascotMouth" d="M 42 60 Q 50 68 58 60" fill="none" stroke="#2C3E50" stroke-width="3" stroke-linecap="round" />
+          <!-- Bintang Aksesori -->
+          <path d="M 50 12 L 52 17 L 57 17 L 53 20 L 55 25 L 50 22 L 45 25 L 47 20 L 43 17 L 48 17 Z" fill="#FFCA28" />
+        </svg>
+      </div>
+
+      <div class="login-box">
+        <div class="input-group">
+          <label for="playerName">👤 Nama Lengkap Siswa:</label>
+          <input type="text" id="playerName" placeholder="Ketik namamu di sini..." autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label for="playerClass">🏫 Kelas (Contoh: 5A / 5B):</label>
+          <input type="text" id="playerClass" placeholder="Ketik kelasmu..." autocomplete="off">
+        </div>
+      </div>
+
+      <p style="font-family: var(--font-heading); margin-bottom: 8px; color: #334E68;">🎯 Pilih Tingkat Kesulitan:</p>
+      <div class="level-container">
+        <div class="level-card selected" onclick="selectLevel('easy', this)">
+          <h4 style="color: #2E7D32;">🟢 Santai</h4>
+          <p>Waktu 30 dtk<br>Ada Hint</p>
+        </div>
+        <div class="level-card" onclick="selectLevel('medium', this)">
+          <h4 style="color: #F57C00;">🟡 Siap Cerdas</h4>
+          <p>Waktu 15 dtk<br>Tantangan Sedang</p>
+        </div>
+        <div class="level-card" onclick="selectLevel('hard', this)">
+          <h4 style="color: #C62828;">🔴 Misi Kilat</h4>
+          <p>Waktu 8 dtk<br>Skor 2x Lipat</p>
+        </div>
+      </div>
+
+      <button class="btn-action" onclick="startGame()">🚀 MULAI PETUALANGAN!</button>
+    </div>
+
+    <!-- 2. HALAMAN GAMEPLAY (PERMAINAN) -->
+    <div id="gameScreen" class="screen">
+      <!-- HUD Atas -->
+      <div class="hud-bar">
+        <div class="hud-item">👤 <span id="hudName">-</span> (<span id="hudClass">-</span>)</div>
+        <div class="hud-item">⭐ Skor: <span id="scoreDisplay" class="hud-badge">0</span></div>
+        <div class="hud-item">🔥 Combo: <span id="comboDisplay" style="color: #FF7043;">x0</span></div>
+      </div>
+
+      <!-- Indicator Pulau (Soal 1-10) -->
+      <div class="island-progress" id="islandProgress"></div>
+
+      <!-- Visual Mascot Animasi Mini saat Quiz -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px;">
+        <svg class="mascot-svg mascot-idle" id="gameMascot" viewBox="0 0 100 100" style="width: 70px; height: 70px;">
+          <circle cx="50" cy="55" r="35" fill="#4A90E2" />
+          <circle cx="50" cy="55" r="28" fill="#64B5F6" />
+          <circle cx="40" cy="48" r="5" fill="#FFF" /><circle cx="40" cy="48" r="2.5" fill="#2C3E50" />
+          <circle cx="60" cy="48" r="5" fill="#FFF" /><circle cx="60" cy="48" r="2.5" fill="#2C3E50" />
+          <path id="gameMascotMouth" d="M 43 60 Q 50 66 57 60" fill="none" stroke="#2C3E50" stroke-width="3" stroke-linecap="round" />
+        </svg>
+        <div id="speechBubble" style="background: #FFF; border: 2px solid #4A90E2; border-radius: 12px; padding: 6px 14px; font-family: var(--font-heading); font-size: 0.9rem; color: #334E68; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+          Bantu Kiko memilih kata yang tepat ya! 💡
+        </div>
+      </div>
+
+      <!-- Timer Bar -->
+      <div class="timer-container">
+        <div class="timer-fill" id="timerFill"></div>
+      </div>
+
+      <!-- Card Soal -->
+      <div class="question-card">
+        <span class="question-tag" id="questionCategory">Bab 1: Kata Sifat</span>
+        <div class="question-text" id="questionText">Memuat pertanyaan...</div>
+      </div>
+
+      <!-- Hint Box (jika level mudah) -->
+      <div class="hint-box" id="hintBox">💡 <strong>Petunjuk:</strong> <span id="hintText"></span></div>
+
+      <!-- Pilihan Jawaban -->
+      <div class="options-grid" id="optionsContainer"></div>
+    </div>
+
+    <!-- 3. HALAMAN HASIL / RAPOR BELAJAR -->
+    <div id="resultScreen" class="screen">
+      <h1 class="game-title">🎉 Petualangan Selesai!</h1>
+      <p class="subtitle">Hebat! Kamu telah menyeberangi 10 Pulau Kata Ajaib!</p>
+
+      <div class="rapor-card">
+        <div style="text-align: center;">
+          <h2 id="resultPlayerTitle" style="font-family: var(--font-heading); color: #334E68;">Rapor Hasil Belajar</h2>
+          <div class="stars-display" id="starsDisplay">⭐⭐⭐</div>
+          <h3 id="scoreGrade" style="font-family: var(--font-heading); color: #FF7043; font-size: 1.6rem; margin-bottom: 10px;">Sangat Luar Biasa!</h3>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <h5>SKOR AKHIR</h5>
+            <p id="finalScore">0</p>
+          </div>
+          <div class="stat-box">
+            <h5>AKURASI</h5>
+            <p id="finalAccuracy">0%</p>
+          </div>
+          <div class="stat-box">
+            <h5>BENAR / SALAH</h5>
+            <p id="finalCount">0 / 10</p>
+          </div>
+        </div>
+
+        <p style="font-weight: 800; color: #334E68; margin-top: 12px; font-size: 0.95rem;">📋 Pembahasan Ringkas Soal:</p>
+        <div class="review-list" id="reviewList"></div>
+      </div>
+
+      <div style="display: flex; gap: 12px; width: 100%; max-width: 420px;">
+        <button class="btn-action" style="flex: 1; background: linear-gradient(180deg, #4A90E2 0%, #357ABD 100%);" onclick="restartGame()">🔄 MAIN LAGI</button>
+        <button class="btn-action" style="flex: 1;" onclick="window.print()">🖨️ CETAK RAPOR</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* =========================================================
+       1. DATA SOAL BAHASA INDONESIA KELAS 5 - BAB 1
+       ========================================================= */
+    const questionsDatabase = [
+      {
+        category: "Bab 1: Kata Sifat",
+        question: "Kata yang digunakan untuk menerangkan keadaan, ciri, atau sifat dari suatu subjek/benda (seperti ramah, jujur, jeli) disebut ...",
+        options: ["Kata Kerja", "Kata Sifat", "Kata Benda", "Kata Depan"],
+        answer: 1,
+        hint: "Kata ini menjelaskan ciri-ciri atau watak seseorang.",
+        explanation: "Kata sifat (adjektiva) menerangkan keadaan atau karakter suatu benda/subjek."
+      },
+      {
+        category: "Bab 1: Sinonim (Persamaan Kata)",
+        question: "Fitri tidak pernah membuang-buang uang sakunya dan selalu menabung. Sifat Fitri adalah hemat. Persamaan kata (sinonim) dari hemat adalah ...",
+        options: ["Boros", "Irit", "Pelit", "Pemalu"],
+        answer: 1,
+        hint: "Sinonim adalah kata dengan arti yang sama/mirip.",
+        explanation: "Sinonim dari hemat adalah irit."
+      },
+      {
+        category: "Bab 1: Antonim (Lawan Kata)",
+        question: "Bagas sangat berani tampil bernyanyi di depan seluruh siswa saat pentas seni. Lawan kata (antonim) dari kata 'pemberani' adalah ...",
+        options: ["Penakut", "Pemarah", "Pendiam", "Pemalu"],
+        answer: 0,
+        hint: "Antonim adalah lawan kata.",
+        explanation: "Lawan kata dari pemberani adalah penakut."
+      },
+      {
+        category: "Bab 1: Kata Sifat Keunikan",
+        question: "Edo sangat cermat dan teliti saat memeriksa tulisan karangannya sehingga tidak ada ejaan yang salah. Kata sifat yang tepat untuk Edo adalah ...",
+        options: ["Jeli", "Ceroboh", "Angkuh", "Pendiam"],
+        answer: 0,
+        hint: "Jeli artinya tajam penglihatan dan cermat memperhatikan detail.",
+        explanation: "Jeli bermakna cermat, teliti, dan awas terhadap detail kecil."
+      },
+      {
+        category: "Bab 1: Sinonim",
+        question: "Sinta dikenal sebagai anak yang ramah karena selalu tersenyum dan mudah bergaul dengan siapa saja. Sinonim dari kata 'ramah' adalah ...",
+        options: ["Judes", "Supel", "Sombong", "Kaku"],
+        answer: 1,
+        hint: "Cari kata yang menggambarkan orang yang pandai bergaul dan hangat.",
+        explanation: "Ramah memiliki persamaan kata dengan supel."
+      },
+      {
+        category: "Bab 1: Antonim",
+        question: "Walaupun selalu mendapat nilai tertinggi di kelas, Made tetap bersikap rendah hati. Antonim dari kata 'rendah hati' adalah ...",
+        options: ["Sombong", "Baik hati", "Dermawan", "Jujur"],
+        answer: 0,
+        hint: "Rendah hati artinya tidak memamerkan kelebihan diri.",
+        explanation: "Lawan kata dari rendah hati adalah sombong (tinggi hati)."
+      },
+      {
+        category: "Bab 1: Sinonim",
+        question: "Dita selalu memasukkan buku dan alat tulisnya ke dalam tas dengan rapi. Persamaan kata (sinonim) dari kata 'rapi' adalah ...",
+        options: ["Berantakan", "Teratur", "Kotor", "Acak-acakan"],
+        answer: 1,
+        hint: "Rapi berarti tersusun dengan tertib dan bersih.",
+        explanation: "Sinonim dari rapi adalah teratur."
+      },
+      {
+        category: "Bab 1: Antonim",
+        question: "Lawan kata (antonim) dari kata sifat 'rajin' adalah ...",
+        options: ["Tekun", "Malas", "Cerdas", "Cermat"],
+        answer: 1,
+        hint: "Kata ini menggambarkan orang yang suka menunda dan tidak mau berusaha.",
+        explanation: "Antonim dari rajin adalah malas."
+      },
+      {
+        category: "Bab 1: Kata Sifat Diri",
+        question: "Danu selalu mencuci piring bekas makanannya sendiri dan menyiapkan jadwal pelajaran tanpa disuruh ibunya. Sikap Danu menunjukkan bahwa ia anak yang ...",
+        options: ["Manja", "Mandiri", "Penakut", "Individualis"],
+        answer: 1,
+        hint: "Anak yang dapat melakukan tugasnya sendiri tanpa bergantung pada orang lain.",
+        explanation: "Mandiri artinya dapat berdiri sendiri dan tidak bergantung pada orang lain."
+      },
+      {
+        category: "Bab 1: Konsep Kebahasaan",
+        question: "Pasangan kata 'Cermat - Teliti' merupakan contoh ..., sedangkan pasangan kata 'Cermat - Ceroboh' merupakan contoh ...",
+        options: ["Antonim - Sinonim", "Sinonim - Antonim", "Kata Sifat - Kata Kerja", "Kata Benda - Kata Sifat"],
+        answer: 1,
+        hint: "Cermat & Teliti bermakna sama, sedangkan Cermat & Ceroboh berlawanan makna.",
+        explanation: "Cermat-Teliti adalah Sinonim (persamaan), Cermat-Ceroboh adalah Antonim (berlawanan)."
+      }
+    ];
+
+    /* =========================================================
+       2. GAME STATE & VARIABLES
+       ========================================================= */
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let combo = 0;
+    let selectedLevel = 'easy'; // easy, medium, hard
+    let timerInterval = null;
+    let timeLeft = 0;
+    let maxTime = 30;
+    let audioEnabled = true;
+    let userAnswers = [];
+
+    // Synthesizer Web Audio API (Zero external assets needed!)
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new AudioContext();
+    }
+
+    function playSound(type) {
+      if (!audioEnabled) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'click') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+        osc.start(now); osc.stop(now + 0.05);
+      } else if (type === 'correct') {
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.08);
+          gain.gain.setValueAtTime(0.25, now + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.25);
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.25);
+        });
+      } else if (type === 'wrong') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.linearRampToValueAtTime(110, now + 0.3);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.3);
+      } else if (type === 'tick') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(800, now);
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.03);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.03);
+      }
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('audioBtn').innerText = audioEnabled ? "🔊 Suara: ON" : "🔇 Suara: OFF";
+    }
+
+    /* =========================================================
+       3. SYSTEM LOGIN & LEVEL SELECTION
+       ========================================================= */
+    function selectLevel(level, element) {
+      playSound('click');
+      selectedLevel = level;
+      document.querySelectorAll('.level-card').forEach(card => card.classList.remove('selected'));
+      element.classList.add('selected');
+    }
+
+    function startGame() {
+      playSound('click');
+      const name = document.getElementById('playerName').value.trim();
+      const studentClass = document.getElementById('playerClass').value.trim();
+
+      if (!name || !studentClass) {
+        alert("Mohon isi Nama Lengkap dan Kelasmu terlebih dahulu ya! 😊");
+        return;
+      }
+
+      // Setup HUD
+      document.getElementById('hudName').innerText = name;
+      document.getElementById('hudClass').innerText = studentClass;
+
+      // Setup Level Config
+      if (selectedLevel === 'easy') maxTime = 30;
+      else if (selectedLevel === 'medium') maxTime = 15;
+      else if (selectedLevel === 'hard') maxTime = 8;
+
+      // Reset State
+      currentQuestionIndex = 0;
+      score = 0;
+      combo = 0;
+      userAnswers = [];
+      document.getElementById('scoreDisplay').innerText = score;
+      document.getElementById('comboDisplay').innerText = 'x0';
+
+      // Switch Screen
+      switchScreen('gameScreen');
+      buildIslandProgress();
+      loadQuestion();
+    }
+
+    function switchScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    /* =========================================================
+       4. GAMEPLAY LOGIC (ISLAND & QUESTION MANAGEMENT)
+       ========================================================= */
+    function buildIslandProgress() {
+      const container = document.getElementById('islandProgress');
+      container.innerHTML = '';
+      for (let i = 0; i < questionsDatabase.length; i++) {
+        const dot = document.createElement('div');
+        dot.className = `island-dot ${i === 0 ? 'active' : ''}`;
+        dot.id = `dot-${i}`;
+        dot.innerText = i + 1;
+        container.appendChild(dot);
+      }
+    }
+
+    function updateIslandProgress() {
+      for (let i = 0; i < questionsDatabase.length; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (!dot) continue;
+        if (i < currentQuestionIndex) {
+          dot.className = 'island-dot completed';
+        } else if (i === currentQuestionIndex) {
+          dot.className = 'island-dot active';
+        } else {
+          dot.className = 'island-dot';
+        }
+      }
+    }
+
+    function loadQuestion() {
+      if (currentQuestionIndex >= questionsDatabase.length) {
+        endGame();
+        return;
+      }
+
+      updateIslandProgress();
+      const q = questionsDatabase[currentQuestionIndex];
+
+      // Update UI
+      document.getElementById('questionCategory').innerText = q.category;
+      document.getElementById('questionText').innerText = q.question;
+
+      // Mascot Speech & Expression Reset
+      setMascotState('idle', 'Bantu Kiko memilih kata yang tepat ya! 💡');
+
+      // Hint Display
+      const hintBox = document.getElementById('hintBox');
+      if (selectedLevel === 'easy') {
+        hintBox.style.display = 'block';
+        document.getElementById('hintText').innerText = q.hint;
+      } else {
+        hintBox.style.display = 'none';
+      }
+
+      // Generate Options
+      const optionsContainer = document.getElementById('optionsContainer');
+      optionsContainer.innerHTML = '';
+
+      const prefixes = ['A', 'B', 'C', 'D'];
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.onclick = () => checkAnswer(idx, btn);
+        btn.innerHTML = `
+          <span class="option-prefix">${prefixes[idx]}</span>
+          <span>${opt}</span>
+        `;
+        optionsContainer.appendChild(btn);
+      });
+
+      // Start Timer
+      startTimer();
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timeLeft = maxTime;
+      const timerFill = document.getElementById('timerFill');
+      timerFill.style.width = '100%';
+
+      timerInterval = setInterval(() => {
+        timeLeft -= 0.1;
+        const percentage = (timeLeft / maxTime) * 100;
+        timerFill.style.width = `${Math.max(0, percentage)}%`;
+
+        if (timeLeft <= 3 && timeLeft > 0) {
+          playSound('tick');
+        }
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleTimeout();
+        }
+      }, 100);
+    }
+
+    function setMascotState(state, speechText) {
+      const mascot = document.getElementById('gameMascot');
+      const mouth = document.getElementById('gameMascotMouth');
+      document.getElementById('speechBubble').innerText = speechText;
+
+      mascot.className = 'mascot-svg';
+      if (state === 'happy') {
+        mascot.classList.add('mascot-happy');
+        mouth.setAttribute('d', 'M 38 58 Q 50 72 62 58'); // Smile lebar
+      } else if (state === 'sad') {
+        mascot.classList.add('mascot-sad');
+        mouth.setAttribute('d', 'M 40 66 Q 50 56 60 66'); // Sedih / cemberut
+      } else {
+        mascot.classList.add('mascot-idle');
+        mouth.setAttribute('d', 'M 43 60 Q 50 66 57 60'); // Normal
+      }
+    }
+
+    function checkAnswer(selectedIndex, clickedBtn) {
+      clearInterval(timerInterval);
+      const q = questionsDatabase[currentQuestionIndex];
+      const allButtons = document.querySelectorAll('.option-btn');
+      allButtons.forEach(btn => btn.style.pointerEvents = 'none');
+
+      const isCorrect = (selectedIndex === q.answer);
+
+      // Save Record
+      userAnswers.push({
+        question: q.question,
+        userAns: q.options[selectedIndex],
+        correctAns: q.options[q.answer],
+        isCorrect: isCorrect,
+        explanation: q.explanation
+      });
+
+      if (isCorrect) {
+        playSound('correct');
+        clickedBtn.classList.add('correct');
+        setMascotState('happy', 'Hore! Jawabanmu Tepat Sekali! 🎉');
+
+        // Score Calculation
+        combo++;
+        let multiplier = selectedLevel === 'hard' ? 2 : (selectedLevel === 'medium' ? 1.5 : 1);
+        let pointGained = Math.round((100 + (combo * 15)) * multiplier);
+        score += pointGained;
+
+        document.getElementById('scoreDisplay').innerText = score;
+        document.getElementById('comboDisplay').innerText = `x${combo}`;
+      } else {
+        playSound('wrong');
+        clickedBtn.classList.add('wrong');
+        allButtons[q.answer].classList.add('correct');
+        setMascotState('sad', 'Aduh, kurang tepat! Tetap semangat ya! 💪');
+
+        combo = 0;
+        document.getElementById('comboDisplay').innerText = 'x0';
+      }
+
+      // Delay to Next Question
+      setTimeout(() => {
+        currentQuestionIndex++;
+        loadQuestion();
+      }, 1800);
+    }
+
+    function handleTimeout() {
+      const q = questionsDatabase[currentQuestionIndex];
+      const allButtons = document.querySelectorAll('.option-btn');
+      allButtons.forEach(btn => btn.style.pointerEvents = 'none');
+      allButtons[q.answer].classList.add('correct');
+
+      playSound('wrong');
+      setMascotState('sad', 'Waktu Habis! Yuk lanjut ke pulau berikutnya! ⏳');
+
+      userAnswers.push({
+        question: q.question,
+        userAns: "Waktu Habis",
+        correctAns: q.options[q.answer],
+        isCorrect: false,
+        explanation: q.explanation
+      });
+
+      combo = 0;
+      document.getElementById('comboDisplay').innerText = 'x0';
+
+      setTimeout(() => {
+        currentQuestionIndex++;
+        loadQuestion();
+      }, 2000);
+    }
+
+    /* =========================================================
+       5. HASIL AKHIR & CONFETTI ANIMATION
+       ========================================================= */
+    function endGame() {
+      switchScreen('resultScreen');
+
+      const total = questionsDatabase.length;
+      const correctCount = userAnswers.filter(a => a.isCorrect).length;
+      const accuracy = Math.round((correctCount / total) * 100);
+
+      const name = document.getElementById('playerName').value.trim();
+      const studentClass = document.getElementById('playerClass').value.trim();
+
+      document.getElementById('resultPlayerTitle').innerText = `Rapor Belajar: ${name} (${studentClass})`;
+      document.getElementById('finalScore').innerText = score;
+      document.getElementById('finalAccuracy').innerText = `${accuracy}%`;
+      document.getElementById('finalCount').innerText = `${correctCount} / ${total}`;
+
+      // Bintang & Predikat
+      let stars = "⭐";
+      let gradeText = "Perlu Belajar Lagi!";
+      if (accuracy >= 80) {
+        stars = "⭐⭐⭐";
+        gradeText = "Luar Biasa / Sangat Cerdas!";
+        triggerConfetti();
+      } else if (accuracy >= 60) {
+        stars = "⭐⭐";
+        gradeText = "Bagus! Teruskan Belajarmu!";
+      }
+
+      document.getElementById('starsDisplay').innerText = stars;
+      document.getElementById('scoreGrade').innerText = gradeText;
+
+      // Pembahasan Review
+      const reviewList = document.getElementById('reviewList');
+      reviewList.innerHTML = '';
+      userAnswers.forEach((ans, idx) => {
+        const item = document.createElement('div');
+        item.className = 'review-item';
+        item.innerHTML = `
+          <div><strong>Soal ${idx + 1}:</strong> ${ans.question}</div>
+          <div>Status: <span class="${ans.isCorrect ? 'badge-correct' : 'badge-wrong'}">${ans.isCorrect ? 'BENAR ✅' : 'SALAH ❌'}</span></div>
+          <div>Jawabanmu: <em>${ans.userAns}</em> | Jawaban Benar: <strong>${ans.correctAns}</strong></div>
+          <div style="font-size: 0.8rem; color: #64748B; margin-top: 2px;">💡 ${ans.explanation}</div>
+        `;
+        reviewList.appendChild(item);
+      });
+    }
+
+    function restartGame() {
+      playSound('click');
+      switchScreen('loginScreen');
+    }
+
+    // Simple Particle Confetti Effect (Tanpa Library Luar)
+    function triggerConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      const particles = [];
+      const colors = ['#FF7043', '#4A90E2', '#FFCA28', '#66BB6A', '#EC407A'];
+
+      for (let i = 0; i < 70; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vy: Math.random() * 3 + 2,
+          vx: Math.random() * 2 - 1
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.y += p.vy;
+          p.x += p.vx;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        if (particles.some(p => p.y < canvas.height)) {
+          requestAnimationFrame(render);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      render();
+    }
+  </script>
+</body>
+</html>
